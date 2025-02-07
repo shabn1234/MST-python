@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+
+{% block content %}
+<body background="../static/images/recipe_details.jpg"></body>
+<link rel="stylesheet" href="{{ url_for('static', filename='css/recipe_details.css') }}">
+
+<div class="recipe-details">
+    <h2>{{ recipe.name }}</h2>
+
+    <div class="recipe-content">
+        <!-- Recipe Image (Left Side) -->
+        <div class="recipe-image">
+            {% if image_exists %}
+                <img src="{{ url_for('static', filename='uploads/' + image_filename) }}" alt="Recipe Image">
+            {% else %}
+                <img src="{{ url_for('static', filename='images/default.jpg') }}" alt="Default Recipe Image">
+            {% endif %}
+        </div>
+        
+
+        <!-- Recipe Details (Right Side) -->
+        <div class="recipe-text">
+            <p><strong>Ingredients:</strong> {{ recipe.ingredients }}</p>
+            <p><strong>Instructions:</strong> {{ recipe.instructions }}</p>
+            <p><strong>Cooking Time:</strong> {{ recipe.cooking_time }} minutes</p>
+            <p><strong>Serving Size:</strong> {{ recipe.serving_size }}</p>
+        </div>
+    </div>
+
+    <h3>Comments</h3>
+
+    <!-- Display flashed messages (if any) -->
+    {% with messages = get_flashed_messages(with_categories=True) %}
+        {% if messages %}
+            <div class="flash-messages">
+                {% for category, message in messages %}
+                    <p class="{{ category }}">{{ message }}</p>
+                {% endfor %}
+            </div>
+        {% endif %}
+    {% endwith %}
+
+    <!-- Comment Form -->
+    {% if session['loggedin'] %}
+        <form method="POST" action="{{ url_for('comment', recipe_id=recipe.recipe_id) }}">
+            <textarea name="comment" placeholder="Leave a comment..." required></textarea>
+            <button type="submit">Submit Comment</button>
+        </form>
+    {% else %}
+        <p><a href="{{ url_for('login') }}">Login</a> to leave a comment.</p>
+    {% endif %}
+
+    <!-- Comments Section -->
+    <div class="comments">
+        {% if comments %}
+            {% for comment in comments %}
+                <div class="comment">
+                    <p><strong>{{ comment.user_name }}:</strong> {{ comment.comment }}</p>
+                    <p class="comment-date">Commented on: {{ comment.date_posted }}</p> 
+                </div>
+            {% endfor %}
+        {% else %}
+            <p>No comments yet. Be the first to comment!</p>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

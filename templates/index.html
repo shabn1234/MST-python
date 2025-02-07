@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<body background="../static/images/indexbackground.jpg"></body>
+<h2>Featured Recipe</h2>
+<link rel="stylesheet" href="{{ url_for('static', filename='css/featured_recipe.css') }}">
+{% if featured_recipe %}
+    <div class="featured-recipe">
+        <h3>
+            <a href="{{ url_for('recipe_details', recipe_id=featured_recipe.recipe_id) }}">
+                {{ featured_recipe.name }}
+            </a>
+        </h3>
+        <p><strong>Ingredients:</strong> {{ featured_recipe.ingredients }}</p>
+    </div>
+{% else %}
+    <p>No featured recipe available.</p>
+{% endif %}
+
+<!-- Search Form -->
+<form method="GET" action="{{ url_for('index') }}">
+    <div>
+        <input type="text" name="search" value="{{ search_query or '' }}" placeholder="Search by name or ingredients...">
+        <button type="submit">Search</button>
+    </div>
+</form>
+
+<!-- Display Categorized Recipes -->
+{% for category, recipes in categorized_recipes.items() %}
+    <h2>{{ category }}</h2>
+    <div class="recipes">
+        {% if recipes %}
+            {% for recipe in recipes %}
+                <div class="recipe">
+                    <h3>
+                        <a href="{{ url_for('recipe_details', recipe_id=recipe.recipe_id) }}">
+                            {{ recipe.name }}
+                        </a>
+                    </h3>
+                    <p>{{ recipe.ingredients }}</p>
+                </div>
+            {% endfor %}
+        {% else %}
+            <p>No recipes found in this category.</p>
+        {% endif %}
+    </div>
+{% endfor %}
+
+{% endblock %}
+
+
+
+
+

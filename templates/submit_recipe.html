@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<body background="../static/images/recipesubmit.jpg"></body>
+<h2 class="title">Submit a Recipe</h2>
+<link rel="stylesheet" href="{{ url_for('static', filename='css/submit_recipe.css') }}">
+
+<!-- Display flashed messages -->
+{% with messages = get_flashed_messages(with_categories=True) %}
+    {% if messages %}
+        <div class="flash-messages">
+            {% for category, message in messages %}
+                <p class="{{ category }}">{{ message }}</p>
+            {% endfor %}
+        </div>
+    {% endif %}
+{% endwith %}
+
+<!-- Recipe Submission Form -->
+<div class="recipe-form-container">
+    <form method="POST" action="{{ url_for('submit_recipe') }}" enctype="multipart/form-data" class="recipe-form">
+        <label for="name">Recipe Name:</label>
+        <input type="text" id="name" name="name" required>
+
+        <label for="ingredients">Ingredients:</label>
+        <textarea id="ingredients" name="ingredients" required></textarea>
+
+        <label for="instructions">Instructions:</label>
+        <textarea id="instructions" name="instructions" required></textarea>
+
+        <label for="cooking_time">Cooking Time (minutes):</label>
+        <input type="number" id="cooking_time" name="cooking_time" required min="1">
+
+        <label for="serving_size">Serving Size:</label>
+        <input type="number" id="serving_size" name="serving_size" required>
+
+        <!-- Optional Recipe Image Upload -->
+        <label for="image">Upload Recipe Image (optional):</label>
+        <input type="file" id="image" name="image" accept="image/*">
+
+        <button type="submit" class="submit-btn">Submit Recipe</button>
+    </form>
+</div>
+
+{% endblock %}
+
